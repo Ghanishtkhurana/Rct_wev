@@ -4,20 +4,29 @@ import { useEffect, useState } from "react";
 import Footer from "../Components/Footer";
 import Navbar from "../Components/Navbar";
 import ProductPage from "../Components/Product";
+import Skele from "../Components/Skeleton";
 
-const getData = () => {
-  return axios("https://khurana123.herokuapp.com/data?_limit=12&type=mom_baby");
+const getData = async() => {
+  // return axios("https://khurana123.herokuapp.com/data?_limit=12&type=mom_baby");
+  const res = await fetch("https://khurana123.herokuapp.com/data?_limit=12&type=mom_baby")
+  const data = await res.json()
+  return data
 };
 
 function MomBaby() {
   const [data, setData] = useState([]);
+  const [loading,setLoading] = useState(false)
 
   useEffect(() => {
     handleTheFetch();
   }, []);
 
-  const handleTheFetch = () => {
-    getData().then((res) => setData(res.data));
+  const handleTheFetch = async() => {
+    setLoading(true)
+    // getData().then((res) => setData(res.data));
+    const append = await getData()
+    setData(append)
+    setLoading(false)
   };
 
   return (
@@ -28,7 +37,9 @@ function MomBaby() {
           MOM & BABY CARE
         </Text>
       </Center>
-      <SimpleGrid mb={10} columns={[1, 2, 3, 4]}>
+      {/* <Skele /> */}
+      {loading && <Skele/>}
+       <SimpleGrid mb={10} columns={[1, 2, 3, 4]}>
         {data.map((user) => (
           <ProductPage
             id={user.id}
@@ -40,6 +51,8 @@ function MomBaby() {
           />
         ))}
       </SimpleGrid>
+      
+      
       <Footer />
     </Box>
   );

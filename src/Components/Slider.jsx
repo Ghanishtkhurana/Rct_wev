@@ -33,7 +33,7 @@ function ProductSlider() {
     <Box className="slider">
       <Box className="slide-track">
         {product.map((user) => (
-          <NavLink to={`/product/${user.id}`}  >
+          <NavLink to={`/product/${user.id}`}>
           <Flex
             direction={"column"}
             className="slide"

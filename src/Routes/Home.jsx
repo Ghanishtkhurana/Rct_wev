@@ -30,20 +30,30 @@ import ProductPage from "../Components/Product";
 import StrollerOutlinedIcon from "@mui/icons-material/StrollerOutlined";
 import SpaOutlinedIcon from "@mui/icons-material/SpaOutlined";
 import { Link } from "react-router-dom";
+import { Pagination } from "@mui/material";
+import Skele from "../Components/Skeleton";
 
-const getData = () => {
-  return axios("https://khurana123.herokuapp.com/data?_limit=12");
+const getData = async() => {
+  const res = await fetch("https://khurana123.herokuapp.com/data?_limit=12")
+  const data = await res.json()
+  return data
 };
 
 function Home() {
   const [data, setData] = useState([]);
+  const [page, setPage] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     handleTheFetch();
   }, []);
 
-  const handleTheFetch = () => {
-    getData().then((res) => setData(res.data));
+  const handleTheFetch = async () => {
+    setLoading(true);
+    // getData().then((res) => setData(res.data));
+    const append = await getData();
+    setData(append);
+    setLoading(false);
   };
 
   console.log("data", data);
@@ -202,6 +212,7 @@ function Home() {
         maxW={{ base: "full", md: "container.xl" }}
         p={{ base: 2, lg: 0 }}
       >
+        {loading && <Skele/>}
         <SimpleGrid columns={[1, 2, 3, 4]}>
           {data.map((user) => (
             <ProductPage
